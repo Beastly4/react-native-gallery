@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-// import api from "../api/api";
 
 export default function MainContent({ navigation }) {
   const width = Dimensions.get("window").width;
@@ -27,8 +26,6 @@ export default function MainContent({ navigation }) {
       setData(responseJson);
       setIsLoading(false);
       return responseJson;
-      // setData(api());
-      // console.log(data);
     }
     request();
   }, []);
