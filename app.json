@@ -21,6 +21,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "React Native Gallery App",
+    "githubUrl": "https://github.com/Beastly4/react-native-gallery"
   }
 }

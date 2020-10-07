@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
+import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
   Text,
@@ -10,78 +11,64 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { fetchImages } from "../redux/actions";
+import Loader from "./Loader";
 
-export default function MainContent({ navigation }) {
+const MainContent = ({ navigation }) => {
   const width = Dimensions.get("window").width;
   const height = Dimensions.get("window").height;
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const URL =
-    "https://api.unsplash.com/photos/?client_id=tCdVGtO8jGpBL3JxrGUYoLCVpVOuI5VXd1TfMjkMz8g";
+  const dispatch = useDispatch();
+  const images = useSelector((state) => state.images[0]);
+  const loader = useSelector((state) => state.loader.loading);
 
   useEffect(() => {
-    async function request() {
-      let response = await fetch(URL);
-      let responseJson = await response.json();
-      setData(responseJson);
-      setIsLoading(false);
-      return responseJson;
-    }
-    request();
+    dispatch(fetchImages());
   }, []);
   return (
-    <View style={styles.mainContent}>
+    <View style={{ width: width, height: height, backgroundColor: "#3366FF" }}>
       <Header />
-      {!isLoading ? (
-        <SafeAreaView style={styles.mainer}>
-          <FlatList
-            style={styles.container}
-            showsVerticalScrollIndicator={false}
-            data={data}
-            keyExtractor={({ id }, index) => id}
-            contentContainerStyle={{ paddingBottom: 180 }}
-            renderItem={({ item }) => {
-              return (
-                <View>
-                  <TouchableOpacity
-                    activeOpacity={1}
-                    backgroundColor="#FFF"
-                    onPress={() => {
-                      navigation.navigate("FullScreenImage", {
-                        url: item.urls.full,
-                      });
+      {loader && <Loader />}
+
+      <SafeAreaView style={styles.mainer}>
+        <FlatList
+          style={styles.container}
+          showsVerticalScrollIndicator={false}
+          data={images}
+          keyExtractor={({ id }) => id}
+          contentContainerStyle={{ paddingBottom: 180 }}
+          renderItem={({ item }) => {
+            return (
+              <View>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  backgroundColor="#FFF"
+                  onPress={() => {
+                    navigation.navigate("FullScreenImg", {
+                      url: item.urls.full,
+                    });
+                  }}
+                >
+                  <Image
+                    style={styles.image}
+                    source={{
+                      uri: item.urls.small,
                     }}
-                  >
-                    <Image
-                      style={styles.image}
-                      source={{
-                        uri: item.urls.small,
-                      }}
-                    />
-                  </TouchableOpacity>
-                  <Text style={styles.author}>{item.user.name}</Text>
-                  <Text style={styles.description}>
-                    {item.description || item.alt_description}
-                  </Text>
-                </View>
-              );
-            }}
-          />
-        </SafeAreaView>
-      ) : (
-        <View
-          style={{
-            alignItems: "center",
-            width: width,
-            height: height,
+                  />
+                </TouchableOpacity>
+                <Text style={styles.author}>{item.user.name}</Text>
+                <Text style={styles.description}>
+                  {item.description || item.alt_description}
+                </Text>
+              </View>
+            );
           }}
-        >
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      )}
+        />
+      </SafeAreaView>
     </View>
   );
-}
+};
+
+export default MainContent;
 
 const styles = StyleSheet.create({
   mainer: {
@@ -89,9 +76,7 @@ const styles = StyleSheet.create({
     flex: 0,
     marginHorizontal: 5,
   },
-  mainContent: {
-    backgroundColor: "#3366FF",
-  },
+
   container: {
     paddingTop: 30,
   },

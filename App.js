@@ -1,43 +1,14 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import MainContent from "./src/components/MainContent";
+import { Provider } from "react-redux";
+import AsyncGalleryApp from "./src/components/AsyncGalleryApp";
+import store from "./src/redux/store";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import FullScreenImage from "./src/components/FullScreenImg";
-
-const Stack = createStackNavigator();
-
-export default function App() {
+function App() {
   return (
-    <NavigationContainer style={styles.app}>
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name="MainContent"
-          component={MainContent}
-        ></Stack.Screen>
-        <Stack.Screen
-          options={{
-            headerStyle: {
-              height: 0,
-            },
-            headerTitle: "",
-
-            headerLeft: null,
-          }}
-          name="FullScreenImage"
-          component={FullScreenImage}
-        ></Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <AsyncGalleryApp />
+    </Provider>
   );
 }
 
-const styles = StyleSheet.create({
-  app: {
-    backgroundColor: "#000099",
-  },
-});
+export default App;

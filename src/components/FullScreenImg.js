@@ -7,6 +7,7 @@ import {
   Text,
   Dimensions,
 } from "react-native";
+import Loader from "./Loader";
 
 export default function FullScreenImg({ route, navigation }) {
   const width = Dimensions.get("window").width;
@@ -43,11 +44,7 @@ export default function FullScreenImg({ route, navigation }) {
         ></Text>
       </TouchableOpacity>
 
-      {isLoading && (
-        <View style={styles.loading}>
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      )}
+      {isLoading && <Loader />}
 
       <Image
         onLoad={_onLoad}
